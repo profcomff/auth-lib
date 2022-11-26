@@ -23,7 +23,7 @@ class OAuth2TokenAPI(OAuth2):
             scopes = {}
 
         flows = OAuthFlowsModel(
-            authorizationCode={
+            implicit={
                 "authorizationUrl": authorizationUrl,
                 "refreshUrl": refreshUrl,
                 "scopes": scopes,
