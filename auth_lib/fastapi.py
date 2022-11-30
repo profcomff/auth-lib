@@ -1,7 +1,7 @@
 import warnings
 from typing import Optional, Any
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Header
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.security import OAuth2
 from fastapi.security.utils import get_authorization_scheme_param
@@ -56,11 +56,10 @@ class OAuth2TokenAPI(OAuth2):
         return param
 
 
-def auth_required(url: str, request: Request):
+def auth_required(url: str):
     def _auth_required(endpoint: Callable[[object], Awaitable[object]]):
         @wraps(endpoint)
-        async def auth_endpoint(*args, **kwargs) -> object:
-            authorization = request.headers.get("Authorization")
+        async def auth_endpoint(*args, request: Request, authorization: str = Header(...), **kwargs) -> object:
             scheme, param = get_authorization_scheme_param(authorization)
             if not authorization or scheme.lower() != "token":
                 raise HTTPException(
