@@ -1,7 +1,6 @@
 from typing import Optional
 
 from fastapi import HTTPException
-from fastapi.param_functions import Form
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.security import OAuth2
 from fastapi.security.utils import get_authorization_scheme_param
@@ -13,6 +12,7 @@ class OAuth2TokenAPI(OAuth2):
     def __init__(
         self,
         authorizationUrl: str,
+        tokenUrl: str,
         scheme_name: Optional[str] = None,
         scopes: Optional[dict[str, str]] = None,
         description: Optional[str] = None,
@@ -23,8 +23,9 @@ class OAuth2TokenAPI(OAuth2):
             scopes = {}
 
         flows = OAuthFlowsModel(
-            implicit={
+            authorizationCode={
                 "authorizationUrl": authorizationUrl,
+                "tokenUrl": tokenUrl,
                 "refreshUrl": refreshUrl,
                 "scopes": scopes,
             }
@@ -50,13 +51,4 @@ class OAuth2TokenAPI(OAuth2):
                 return None
         return param
 
-
-class OAuth2RequestForm:
-    def __init__(
-        self,
-        email: str = Form(),
-        password: str = Form(),
-    ):
-        self.email = email
-        self.password = password
 

@@ -1,7 +1,7 @@
 import requests
 
 
-async def email_login(url: str, email: str, password: str) -> dict[str, str]:
+def email_login(url: str, email: str, password: str) -> dict[str, str]:
     json = {
         "email": email,
         "password": password
@@ -10,13 +10,13 @@ async def email_login(url: str, email: str, password: str) -> dict[str, str]:
     return response.json()
 
 
-async def check_token(url: str, token: str) -> bool:
+def check_token(url: str, token: str) -> bool:
     headers = {"Authorization": f"Token {token}"}
     response = requests.post(url=f"{url}/me", headers=headers)
     return True if response.status_code == 200 else False
 
 
-async def logout(url: str, token: str) -> bool:
+def logout(url: str, token: str) -> bool:
     headers = {"Authorization": f"Token {token}"}
     response = requests.post(url=f"{url}/logout", headers=headers)
     return True if response.status_code == 200 else False
