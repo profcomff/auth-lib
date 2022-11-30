@@ -7,7 +7,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 
 def auth_required(url: str):
     def _auth_required(endpoint: Callable[[object], Awaitable[object]]):
-        async def auth_endpoint(request: Request, *args, authorization: str = Header(...), **kwargs) -> object:
+        async def auth_endpoint(*args, request: Request,  authorization: str = Header(...), **kwargs) -> object:
             if not request.headers.get("authorization"):
                 raise HTTPException(
                     status_code=HTTP_401_UNAUTHORIZED,
@@ -28,7 +28,6 @@ def auth_required(url: str):
         auth_endpoint.__signature__ = inspect.Signature(
             parameters=[
                 *inspect.signature(endpoint).parameters.values(),
-
                 *filter(
                     lambda p: p.kind not in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD),
                     inspect.signature(auth_endpoint).parameters.values()
