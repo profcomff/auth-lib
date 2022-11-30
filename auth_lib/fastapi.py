@@ -8,6 +8,7 @@ from fastapi.security.utils import get_authorization_scheme_param
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
 from typing import Callable, Awaitable
+from functools import wraps
 import asyncio
 
 
@@ -57,6 +58,7 @@ class OAuth2TokenAPI(OAuth2):
 
 def auth_required(url: str, request: Request):
     def _auth_required(endpoint: Callable[[object], Awaitable[object]]):
+        @wraps(endpoint)
         async def auth_endpoint(*args, **kwargs) -> object:
             authorization = request.headers.get("Authorization")
             scheme, param = get_authorization_scheme_param(authorization)
