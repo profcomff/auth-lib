@@ -37,7 +37,6 @@ class UnionAuth(SecurityBase):
 
     async def __call__(
             self, request: Request,
-            authorization: str = Depends(APIKeyHeader(name="authorization", scheme_name="token"))
     ) -> dict:
         authorization = request.headers.get("authorization")
         if not authorization:
