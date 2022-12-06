@@ -1,42 +1,54 @@
-from typing import Callable, Awaitable
+from urllib.parse import urljoin
 
-from fastapi import HTTPException, Header
+import aiohttp
+from fastapi.exceptions import HTTPException
+from fastapi.openapi.models import APIKey, APIKeyIn
+from fastapi.security.base import SecurityBase
 from starlette.requests import Request
-from starlette.status import HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_403_FORBIDDEN
 
 
-def auth_required(url: str):
-    def _auth_required(endpoint: Callable[[object], Awaitable[object]]):
-        async def auth_endpoint(*args, request: Request,  authorization: str = Header(default=None), **kwargs) -> object:
-            if not request.headers.get("authorization"):
-                raise HTTPException(
-                    status_code=HTTP_401_UNAUTHORIZED,
-                    detail="Not authenticated",
-                    headers={"WWW-Authenticate": "Token"},
-                )
-            from .methods import check_token
-            check = check_token(url, authorization)
-            if not check:
-                raise HTTPException(
-                    status_code=HTTP_401_UNAUTHORIZED,
-                    detail="Auth error",
-                    headers={"WWW-Authenticate": "Token"},
-                )
-            return await endpoint(*args, **kwargs)
+class UnionAuth(SecurityBase):
+    model = APIKey.construct(in_=APIKeyIn.header, name="Authorization")
+    scheme_name = 'token'
+    auth_url = "https://auth.api.test.profcomff.com"
 
-        import inspect
-        auth_endpoint.__signature__ = inspect.Signature(
-            parameters=[
-                *inspect.signature(endpoint).parameters.values(),
-                *filter(
-                    lambda p: p.kind not in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD),
-                    inspect.signature(auth_endpoint).parameters.values()
-                )
-            ],
-            return_annotation=inspect.signature(endpoint).return_annotation,
-        )
-        return auth_endpoint
-    return _auth_required
+    def __init__(self, auto_error=True) -> None:
+        super().__init__()
+        self.auto_error = auto_error
+
+    @staticmethod
+    def _get_creds(header_value: str):
+        value = header_value.split(maxsplit=2)
+        if len(value) == 2:
+            return value
+        return "token", header_value
+
+    def _except(self):
+        if self.auto_error:
+            raise HTTPException(
+                status_code=HTTP_403_FORBIDDEN, detail="Not authenticated"
+            )
+        else:
+            return {}
+
+    async def __call__(
+            self, request: Request
+    ) -> dict:
+        authorization = request.headers.get("authorization")
+        scheme, credentials = self._get_creds(authorization)
+        if scheme not in ["token"]:
+            return self._except()
+        async with aiohttp.request(
+                'POST',
+                urljoin(self.auth_url, '/me'),
+                json={"token": credentials}
+        ) as r:
+            status_code = r.status
+            user = await r.json()
+        if status_code != 200:
+            self._except()
+        return user
 
 
 
