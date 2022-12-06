@@ -1,8 +1,10 @@
 from urllib.parse import urljoin
 
 import aiohttp
+from fastapi import Depends
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import APIKey, APIKeyIn
+from fastapi.security.api_key import APIKeyHeader
 from fastapi.security.base import SecurityBase
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
@@ -19,7 +21,8 @@ class UnionAuth(SecurityBase):
 
     @staticmethod
     def _get_creds(header_value: str):
-        value = header_value.split(maxsplit=2)
+        if header_value:
+            value = header_value.split(maxsplit=2)
         if len(value) == 2:
             return value
         return "token", header_value
@@ -33,9 +36,14 @@ class UnionAuth(SecurityBase):
             return {}
 
     async def __call__(
-            self, request: Request
+            self, request: Request,
+            authorization: str = Depends(APIKeyHeader(name="authorization", scheme_name="token"))
     ) -> dict:
         authorization = request.headers.get("authorization")
+        if not authorization:
+            raise HTTPException(
+                status_code=HTTP_403_FORBIDDEN, detail="Not authenticated"
+            )
         scheme, credentials = self._get_creds(authorization)
         if scheme not in ["token"]:
             return self._except()
