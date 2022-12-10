@@ -8,7 +8,7 @@ with open("requirements.txt", "r") as req_file:
 
 
 setup(
-    name="auth_lub",
+    name="auth_lib",
     version="0.0.1",
     author="Semyon Grigoriev",
     long_description=readme,
@@ -17,6 +17,6 @@ setup(
     packages=find_packages(),
     install_requires=req,
     classifiers=[
-        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
 )
