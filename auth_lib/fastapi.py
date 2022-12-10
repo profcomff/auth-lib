@@ -1,10 +1,8 @@
 from urllib.parse import urljoin
 
 import aiohttp
-from fastapi import Depends
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import APIKey, APIKeyIn
-from fastapi.security import APIKeyHeader
 from fastapi.security.base import SecurityBase
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
@@ -13,19 +11,12 @@ from starlette.status import HTTP_403_FORBIDDEN
 class UnionAuth(SecurityBase):
     model = APIKey.construct(in_=APIKeyIn.header, name="Authorization")
     scheme_name = 'token'
-    auth_url = "https://auth.api.test.profcomff.com"
+    auth_url: str
 
-    def __init__(self, auto_error=True) -> None:
+    def __init__(self, auth_url: str, auto_error=True) -> None:
         super().__init__()
         self.auto_error = auto_error
-
-    @staticmethod
-    def _get_creds(header_value: str):
-        if header_value:
-            value = header_value.split(maxsplit=2)
-        if len(value) == 2:
-            return value
-        return "token", header_value
+        self.auth_url = auth_url
 
     def _except(self):
         if self.auto_error:
@@ -37,19 +28,14 @@ class UnionAuth(SecurityBase):
 
     async def __call__(
             self, request: Request,
-    ) -> dict:
-        authorization = request.headers.get("authorization")
-        if not authorization:
-            raise HTTPException(
-                status_code=HTTP_403_FORBIDDEN, detail="Not authenticated"
-            )
-        scheme, credentials = self._get_creds(authorization)
-        if scheme not in ["token"]:
+    ) -> dict[str, str]:
+        token = request.headers.get("token")
+        if not token:
             return self._except()
         async with aiohttp.request(
                 'POST',
                 urljoin(self.auth_url, '/me'),
-                json={"token": credentials}
+                headers={"token": token},
         ) as r:
             status_code = r.status
             user = await r.json()
