@@ -1,3 +1,5 @@
 fastapi
 starlette
 requests
+aiohttp
+setuptools

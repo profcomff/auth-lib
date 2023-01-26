@@ -1,10 +1,8 @@
 from typing import Any
 
 import requests
-# import grequests
 
 
-from .interface import AuthLibMeta
 
 from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
@@ -12,7 +10,7 @@ from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 # See docs on https://auth.api.test.profcomff.com/docs
 
 
-class AuthLib(AuthLibMeta):
+class AuthLib:
 
     def email_login(self, email: str, password: str) -> dict[str, Any]:
         json = {

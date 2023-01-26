@@ -3,12 +3,11 @@ from typing import Any
 import aiohttp
 
 
-from .interface import AuthLibMeta
 
 from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
 
-class AsyncAuthLib(AuthLibMeta):
+class AsyncAuthLib:
     async def email_login(self, email: str, password: str) -> dict[str, Any]:
         json = {
             "email": email,
