@@ -11,6 +11,10 @@ from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
 
 class AuthLib:
+    url: str
+
+    def __init__(self, url: str):
+        self.url = url
 
     def email_login(self, email: str, password: str) -> dict[str, Any]:
         json = {
@@ -24,12 +28,13 @@ class AuthLib:
             case 401:
                 raise AuthFailed(response=response.json()["body"])
 
-    def check_token(self, token: str) -> bool:
+    def check_token(self, token: str) -> dict[str, Any]:
         headers = {"token": token}
+        fields = frozenset(["email"])
         response = requests.post(url=f"{self.url}/me", headers=headers)
         match response.status_code:
             case 200:
-                return True
+                return {k: response.json()[k] for k in fields & response.json().keys()}
             case 400:
                 raise IncorrectData(response=response.json()["body"])
             case 404:

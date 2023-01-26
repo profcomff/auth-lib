@@ -2,12 +2,15 @@ from typing import Any
 
 import aiohttp
 
-
-
 from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
 
 class AsyncAuthLib:
+    url: str
+
+    def __init__(self, url: str):
+        self.url = url
+
     async def email_login(self, email: str, password: str) -> dict[str, Any]:
         json = {
             "email": email,
@@ -21,13 +24,15 @@ class AsyncAuthLib:
             case 401:
                 raise AuthFailed(response=await response.json())
 
-    async def check_token(self, token: str) -> bool:
+    async def check_token(self, token: str) -> dict[str, Any]:
         headers = {"token": token}
+        fields = frozenset(["email"])
         async with aiohttp.ClientSession() as session:
             response = await session.post(url=f"{self.url}/me", headers=headers)
         match response.status:
             case 200:
-                return True
+                json: dict[str, Any] = await response.json()
+                return {k: json[k] for k in fields & json.keys()}
             case 400:
                 raise IncorrectData(response=await response.json())
             case 404:
