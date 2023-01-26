@@ -6,6 +6,7 @@ from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
 
 class AsyncAuthLib:
+    __slots__ = ("url", )
     url: str
 
     def __init__(self, url: str):
