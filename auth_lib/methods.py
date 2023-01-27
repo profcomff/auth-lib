@@ -2,8 +2,6 @@ from typing import Any
 
 import requests
 
-
-
 from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
 
@@ -11,7 +9,6 @@ from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
 
 class AuthLib:
-    __slots__ = ("url", )
     url: str
 
     def __init__(self, url: str):
@@ -54,6 +51,3 @@ class AuthLib:
                 raise AuthFailed(response=response.json()["body"])
             case 403:
                 raise SessionExpired(response=response.json()["body"])
-
-
-
