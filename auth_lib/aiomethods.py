@@ -31,8 +31,7 @@ class AsyncAuthLib:
             response = await session.post(url=f"{self.url}/me", headers=headers)
         match response.status:
             case 200:
-                json: dict[str, Any] = await response.json()
-                return {k: json[k] for k in fields & json.keys()}
+                return await response.json()
             case 400:
                 raise IncorrectData(response=await response.json())
             case 404:

@@ -32,7 +32,7 @@ class AuthLib:
         response = requests.post(url=f"{self.url}/me", headers=headers)
         match response.status_code:
             case 200:
-                return {k: response.json()[k] for k in fields & response.json().keys()}
+                return response.json()
             case 400:
                 raise IncorrectData(response=response.json()["body"])
             case 404:
