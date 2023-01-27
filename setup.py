@@ -4,7 +4,7 @@ with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
 setup(
-    name="auth_lib",
+    name="auth_lib_profcomff",
     version="0.0.1",
     author="Semyon Grigoriev",
     long_description=readme,
