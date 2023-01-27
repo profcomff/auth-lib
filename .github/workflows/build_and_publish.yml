@@ -1,0 +1,30 @@
+name: Publish Python 🐍 distributions 📦
+
+on:
+  push:
+    branches: ['main']
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish:
+    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+          run: |
+            python -m ensurepip \
+            pip install build --user \
+            python -m build --wheel --sdist --outdir dist/
+      - name: Publish distribution 📦 to PyPI
+          if: startsWith(github.ref, 'refs/tags')
+          uses: pypa/gh-action-pypi-publish@release/v1
+          with:
+            repository_url: https://github.com/profcomff/auth-lib
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
