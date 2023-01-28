@@ -29,7 +29,7 @@ class UnionAuth(SecurityBase):
     async def __call__(
             self, request: Request,
     ) -> dict[str, str]:
-        token = request.headers.get("token")
+        token = request.headers.get("Authorization")
         if not token:
             return self._except()
         async with aiohttp.request(
