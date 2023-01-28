@@ -15,10 +15,7 @@ class AuthLib:
         self.url = url
 
     def email_login(self, email: str, password: str) -> dict[str, Any]:
-        json = {
-            "email": email,
-            "password": password
-        }
+        json = {"email": email, "password": password}
         response = requests.post(url=f"{self.url}/email/login", json=json)
         match response.status_code:
             case 200:
