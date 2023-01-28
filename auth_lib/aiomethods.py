@@ -12,10 +12,7 @@ class AsyncAuthLib:
         self.url = url
 
     async def email_login(self, email: str, password: str) -> dict[str, Any]:
-        json = {
-            "email": email,
-            "password": password
-        }
+        json = {"email": email, "password": password}
         async with aiohttp.ClientSession() as session:
             response = await session.post(url=f"{self.url}/email/login", json=json)
         match response.status:

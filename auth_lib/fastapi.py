@@ -10,7 +10,7 @@ from starlette.status import HTTP_403_FORBIDDEN
 
 class UnionAuth(SecurityBase):
     model = APIKey.construct(in_=APIKeyIn.header, name="Authorization")
-    scheme_name = 'token'
+    scheme_name = "token"
     auth_url: str
 
     def __init__(self, auth_url: str, auto_error=True) -> None:
@@ -27,21 +27,19 @@ class UnionAuth(SecurityBase):
             return {}
 
     async def __call__(
-            self, request: Request,
+        self,
+        request: Request,
     ) -> dict[str, str]:
         token = request.headers.get("Authorization")
         if not token:
             return self._except()
         async with aiohttp.request(
-                'POST',
-                urljoin(self.auth_url, '/me'),
-                headers={"token": token},
+            "POST",
+            urljoin(self.auth_url, "/me"),
+            headers={"token": token},
         ) as r:
             status_code = r.status
             user = await r.json()
         if status_code != 200:
             self._except()
         return user
-
-
-
