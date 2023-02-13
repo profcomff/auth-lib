@@ -5,7 +5,7 @@ import requests
 from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
 
-# See docs on https://auth.api.test.profcomff.com/docs
+# See docs on https://auth.api.profcomff.com/docs
 
 
 class AuthLib:
@@ -24,9 +24,9 @@ class AuthLib:
                 raise AuthFailed(response=response.json()["body"])
 
     def check_token(self, token: str) -> dict[str, Any]:
-        headers = {"token": token}
+        headers = {"Authorization": token}
         fields = frozenset(["email"])
-        response = requests.post(url=f"{self.url}/me", headers=headers)
+        response = requests.get(url=f"{self.url}/me", headers=headers, params={"info": ["groups", "indirect_groups"]})
         match response.status_code:
             case 200:
                 return response.json()
