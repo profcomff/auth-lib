@@ -34,9 +34,10 @@ class UnionAuth(SecurityBase):
         if not token:
             return self._except()
         async with aiohttp.request(
-            "POST",
+            "GET",
             urljoin(self.auth_url, "/me"),
-            headers={"token": token},
+            headers={"Authorization": token},
+            params={"info": ["groups", "indirect_groups"]}
         ) as r:
             status_code = r.status
             user = await r.json()

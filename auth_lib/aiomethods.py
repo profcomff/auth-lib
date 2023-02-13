@@ -22,10 +22,10 @@ class AsyncAuthLib:
                 raise AuthFailed(response=await response.json())
 
     async def check_token(self, token: str) -> dict[str, Any]:
-        headers = {"token": token}
+        headers = {"Authorization": token}
         fields = frozenset(["email"])
         async with aiohttp.ClientSession() as session:
-            response = await session.post(url=f"{self.url}/me", headers=headers)
+            response = await session.get(url=f"{self.url}/me", headers=headers, params={"info": ["groups", "indirect_groups"]})
         match response.status:
             case 200:
                 return await response.json()
