@@ -13,7 +13,7 @@ class UnionAuth(SecurityBase):
     scheme_name = "token"
     auth_url: str
     allow_none: bool
-    scopes: list[str] = []
+    scopes: list[str]
     auto_error: bool
 
     def __init__(
