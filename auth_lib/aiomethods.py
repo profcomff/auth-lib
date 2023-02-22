@@ -25,7 +25,11 @@ class AsyncAuthLib:
         headers = {"Authorization": token}
         fields = frozenset(["email"])
         async with aiohttp.ClientSession() as session:
-            response = await session.get(url=f"{self.url}/me", headers=headers, params={"info": ["groups", "indirect_groups"]})
+            response = await session.get(
+                url=f"{self.url}/me",
+                headers=headers,
+                params={"info": ["groups", "indirect_groups", "scopes"]},
+            )
         match response.status:
             case 200:
                 return await response.json()
