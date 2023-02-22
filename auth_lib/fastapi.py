@@ -40,7 +40,7 @@ class UnionAuth(SecurityBase):
     async def __call__(
         self,
         request: Request,
-    ) -> dict[str, str]:
+    ) -> dict[str, str] | None:
         token = request.headers.get("Authorization")
         if not token and self.allow_none:
             return None
@@ -53,12 +53,12 @@ class UnionAuth(SecurityBase):
             params={"info": ["groups", "indirect_groups", "scopes"]},
         ) as r:
             status_code = r.status
-            json = await r.json()
+            user_session = await r.json()
         if status_code != 200:
             self._except()
         if len(
             set([scope.lower() for scope in self.scopes])
-            & set([scope["name"].lower() for scope in json["scopes"]])
+            & set([scope["name"].lower() for scope in user_session["scopes"]])
         ) != len(set([scope.lower() for scope in self.scopes])):
             self._except()
-        return json
+        return user_session
