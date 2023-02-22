@@ -25,8 +25,11 @@ class AuthLib:
 
     def check_token(self, token: str) -> dict[str, Any]:
         headers = {"Authorization": token}
-        fields = frozenset(["email"])
-        response = requests.get(url=f"{self.url}/me", headers=headers, params={"info": ["groups", "indirect_groups"]})
+        response = requests.get(
+            url=f"{self.url}/me",
+            headers=headers,
+            params={"info": ["groups", "indirect_groups", "scopes"]},
+        )
         match response.status_code:
             case 200:
                 return response.json()
