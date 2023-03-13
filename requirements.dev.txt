@@ -3,3 +3,4 @@ starlette
 requests
 aiohttp
 setuptools
+pydantic

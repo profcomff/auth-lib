@@ -1,30 +1,44 @@
+from warnings import warn
+
 import aiohttp
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import APIKey, APIKeyIn
 from fastapi.security.base import SecurityBase
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
+from pydantic import BaseSettings
+
+
+class UnionAuthSettings(BaseSettings):
+    AUTH_URL: str = "https://api.test.profcomff.com/auth"
+    AUTH_AUTO_ERROR: bool = True
+    AUTH_ALLOW_NONE: bool = False
+
+    class Config:
+        """Pydantic BaseSettings config"""
+
+        case_sensitive = True
+        env_file = ".env"
 
 
 class UnionAuth(SecurityBase):
     model = APIKey.construct(in_=APIKeyIn.header, name="Authorization")
     scheme_name = "token"
-    auth_url: str
-    allow_none: bool
-    scopes: list[str]
-    auto_error: bool
+    settings = UnionAuthSettings()
 
     def __init__(
         self,
-        auth_url: str = "https://api.test.profcomff.com/auth",
-        auto_error = True,
-        allow_none: bool = False,
         scopes: list[str] = [],
+        auto_error: bool | None = None,
+        allow_none: bool | None = None,
+        auth_url = None,  # Для обратной совместимости
     ) -> None:
+        if auth_url is not None:
+            warn("auth_url in args deprecated, use AUTH_URL env instead", DeprecationWarning)
         super().__init__()
-        self.auto_error = auto_error
-        self.auth_url = auth_url
-        self.allow_none = allow_none
+        self.auth_url = auth_url or self.settings.AUTH_URL
+        self.auto_error = auto_error if auto_error is not None else self.settings.AUTH_AUTO_ERROR
+        self.allow_none = allow_none if allow_none is not None else self.settings.AUTH_ALLOW_NONE
         self.scopes = scopes
 
     def _except(self):
