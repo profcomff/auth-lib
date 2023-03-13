@@ -1,5 +1,3 @@
-from urllib.parse import urljoin
-
 import aiohttp
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import APIKey, APIKeyIn
