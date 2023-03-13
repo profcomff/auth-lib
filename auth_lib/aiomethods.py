@@ -4,6 +4,7 @@ import aiohttp
 
 from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
+# See docs on https://api.test.profcomff.com/auth
 
 class AsyncAuthLib:
     url: str
@@ -28,7 +29,7 @@ class AsyncAuthLib:
             response = await session.get(
                 url=f"{self.url}/me",
                 headers=headers,
-                params={"info": ["groups", "indirect_groups", "scopes"]},
+                params={"info": ["groups", "indirect_groups", "token_scopes", "user_scopes"]},
             )
         match response.status:
             case 200:
@@ -41,7 +42,7 @@ class AsyncAuthLib:
                 raise SessionExpired(response=await response.json())
 
     async def logout(self, token: str) -> bool:
-        headers = {"token": token}
+        headers = {"Authorization": token}
         async with aiohttp.ClientSession() as session:
             response = await session.post(url=f"{self.url}/logout", headers=headers)
 
