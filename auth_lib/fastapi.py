@@ -1,5 +1,3 @@
-from urllib.parse import urljoin
-
 import aiohttp
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import APIKey, APIKeyIn
@@ -18,8 +16,8 @@ class UnionAuth(SecurityBase):
 
     def __init__(
         self,
-        auth_url: str,
-        auto_error=True,
+        auth_url: str = "https://api.test.profcomff.com/auth",
+        auto_error = True,
         allow_none: bool = False,
         scopes: list[str] = [],
     ) -> None:
@@ -48,9 +46,9 @@ class UnionAuth(SecurityBase):
             return self._except()
         async with aiohttp.request(
             "GET",
-            urljoin(self.auth_url, "/me"),
+            f"{self.auth_url}/me",
             headers={"Authorization": token},
-            params={"info": ["groups", "indirect_groups", "scopes"]},
+            params={"info": ["groups", "indirect_groups", "token_scopes", "user_scopes"]},
         ) as r:
             status_code = r.status
             user_session = await r.json()
@@ -58,7 +56,7 @@ class UnionAuth(SecurityBase):
             self._except()
         if len(
             set([scope.lower() for scope in self.scopes])
-            & set([scope["name"].lower() for scope in user_session["scopes"]])
+            & set([scope["name"].lower() for scope in user_session["session_scopes"]])
         ) != len(set([scope.lower() for scope in self.scopes])):
             self._except()
         return user_session

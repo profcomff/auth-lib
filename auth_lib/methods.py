@@ -5,7 +5,7 @@ import requests
 from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
 
-# See docs on https://auth.api.profcomff.com/docs
+# See docs on https://api.test.profcomff.com/?urls.primaryName=auth
 
 
 class AuthLib:
@@ -28,7 +28,7 @@ class AuthLib:
         response = requests.get(
             url=f"{self.url}/me",
             headers=headers,
-            params={"info": ["groups", "indirect_groups", "scopes"]},
+            params={"info": ["groups", "indirect_groups", "token_scopes", "user_session"]},
         )
         match response.status_code:
             case 200:
@@ -41,7 +41,7 @@ class AuthLib:
                 raise SessionExpired(response=response.json()["body"])
 
     def logout(self, token: str) -> bool:
-        headers = {"token": token}
+        headers = {"Authorization": token}
         response = requests.post(url=f"{self.url}/logout", headers=headers)
 
         match response.status_code:
