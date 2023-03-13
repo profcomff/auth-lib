@@ -4,7 +4,7 @@ import aiohttp
 
 from .exceptions import SessionExpired, AuthFailed, IncorrectData, NotFound
 
-# See docs on https://api.test.profcomff.com/auth
+# See docs on https://api.test.profcomff.com/?urls.primaryName=auth
 
 class AsyncAuthLib:
     url: str

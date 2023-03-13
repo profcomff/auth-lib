@@ -16,8 +16,8 @@ class UnionAuth(SecurityBase):
 
     def __init__(
         self,
-        auth_url: str,
-        auto_error=True,
+        auth_url: str = "https://api.test.profcomff.com/auth",
+        auto_error = True,
         allow_none: bool = False,
         scopes: list[str] = [],
     ) -> None:
