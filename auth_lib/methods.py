@@ -28,7 +28,7 @@ class AuthLib:
         response = requests.get(
             url=f"{self.url}/me",
             headers=headers,
-            params={"info": ["groups", "indirect_groups", "token_scopes", "user_session"]},
+            params={"info": ["groups", "indirect_groups", "session_scopes", "user_scopes"]},
         )
         match response.status_code:
             case 200:

@@ -29,7 +29,7 @@ class AsyncAuthLib:
             response = await session.get(
                 url=f"{self.url}/me",
                 headers=headers,
-                params={"info": ["groups", "indirect_groups", "token_scopes", "user_scopes"]},
+                params={"info": ["groups", "indirect_groups", "session_scopes", "user_scopes"]},
             )
         match response.status:
             case 200:
