@@ -62,15 +62,14 @@ class UnionAuth(SecurityBase):
             "GET",
             f"{self.auth_url}/me",
             headers={"Authorization": token},
-            params={"info": ["groups", "indirect_groups", "token_scopes", "user_scopes"]},
+            params={"info": ["groups", "indirect_groups", "session_scopes", "user_scopes"]},
         ) as r:
             status_code = r.status
             user_session = await r.json()
         if status_code != 200:
             self._except()
-        if len(
-            set([scope.lower() for scope in self.scopes])
-            & set([scope["name"].lower() for scope in user_session["session_scopes"]])
-        ) != len(set([scope.lower() for scope in self.scopes])):
+        session_scopes = set([scope["name"].lower() for scope in user_session["session_scopes"]])
+        required_scopes = set([scope.lower() for scope in self.scopes])
+        if required_scopes - session_scopes:
             self._except()
         return user_session

@@ -24,12 +24,11 @@ class AsyncAuthLib:
 
     async def check_token(self, token: str) -> dict[str, Any]:
         headers = {"Authorization": token}
-        fields = frozenset(["email"])
         async with aiohttp.ClientSession() as session:
             response = await session.get(
                 url=f"{self.url}/me",
                 headers=headers,
-                params={"info": ["groups", "indirect_groups", "token_scopes", "user_scopes"]},
+                params={"info": ["groups", "indirect_groups", "session_scopes", "user_scopes"]},
             )
         match response.status:
             case 200:
