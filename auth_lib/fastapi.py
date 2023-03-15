@@ -1,3 +1,4 @@
+from urllib.parse import urljoin
 from warnings import warn
 
 import aiohttp
@@ -60,7 +61,7 @@ class UnionAuth(SecurityBase):
             return self._except()
         async with aiohttp.request(
             "GET",
-            f"{self.auth_url}/me",
+            urljoin(self.auth_url, "/me"),
             headers={"Authorization": token},
             params={"info": ["groups", "indirect_groups", "session_scopes", "user_scopes"]},
         ) as r:
