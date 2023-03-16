@@ -11,7 +11,7 @@ from pydantic import BaseSettings
 
 
 class UnionAuthSettings(BaseSettings):
-    AUTH_URL: str = "https://api.test.profcomff.com/auth"
+    AUTH_URL: str = "https://api.test.profcomff.com/auth/"
     AUTH_AUTO_ERROR: bool = True
     AUTH_ALLOW_NONE: bool = False
 
@@ -38,6 +38,8 @@ class UnionAuth(SecurityBase):
             warn("auth_url in args deprecated, use AUTH_URL env instead", DeprecationWarning)
         super().__init__()
         self.auth_url = auth_url or self.settings.AUTH_URL
+        if not self.auth_url.endswith('/'):
+            self.auth_url = self.auth_url + '/'
         self.auto_error = auto_error if auto_error is not None else self.settings.AUTH_AUTO_ERROR
         self.allow_none = allow_none if allow_none is not None else self.settings.AUTH_ALLOW_NONE
         self.scopes = scopes
@@ -61,7 +63,7 @@ class UnionAuth(SecurityBase):
             return self._except()
         async with aiohttp.request(
             "GET",
-            urljoin(self.auth_url, "/me"),
+            urljoin(self.auth_url, "me"),
             headers={"Authorization": token},
             params={"info": ["groups", "indirect_groups", "session_scopes", "user_scopes"]},
         ) as r:
