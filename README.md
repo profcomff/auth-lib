@@ -30,3 +30,20 @@ async def foo(_=Depends(UnionAuth(scopes=[], allow_none=False, auto_error=True))
   pass
 
 ```
+Depends вызывает инстанс класса с нужными параметрами и возвращает словарь со всеми полями отсюда https://api.test.profcomff.com/#/Logout/me_me_get
+
+Описание класса UnionAuth
+Поля
+```
+auth_url: str - хост аутентфиикации - подгружается из переменных окружения. Имя переменной должно быть AUTH_URL
+scopes: list[str] - список имен скоупов, которые нужны в данной ручке. Например ["printer.user.create", "printer.user.delete"]
+allow_none: bool - Если true, то при отсутствии нужного заголовка в запросе ручка будет доступна юзеру, если заголовк передан, то обработка идет в зависимости от следующего параметра
+auto_error: bool - если true, то при несовпадении скоупов/завершенной сессии и тд(на запрос GET /me не 200) - кинет 401, если false, то не будет кидать ошибки, но будет возвращать None
+```
+Defaults 
+```python
+auth_url="https://api.test.profcomff.com/auth/"
+AUTH_AUTO_ERROR: bool = True
+AUTH_ALLOW_NONE: bool = False
+
+```
