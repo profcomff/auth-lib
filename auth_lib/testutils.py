@@ -93,7 +93,6 @@ RETURN_VALUE: Final[dict[str, Any]] = {
 }
 
 
-
 @pytest.fixture
 def auth_mock(mocker):
     """
