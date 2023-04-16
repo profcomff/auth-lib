@@ -5,6 +5,8 @@
 ## Примеры использования
 ```python
 from auth_lib.fastapi import UnionAuth
+from fastapi import APIRouter, Depends
+router = APIRouter(prefix="/...")
 
 ## Чтобы дернуть ручку нужен один скоуп, авторизация обязательна
 ## Юзкейс https://github.com/profcomff/timetable-api/blob/a374c74cd960941100f6c923ff9c3ff706a1ed09/calendar_backend/routes/room/room.py#L45
@@ -47,4 +49,21 @@ auth_url="https://api.test.profcomff.com/auth/"
 AUTH_AUTO_ERROR: bool = True
 AUTH_ALLOW_NONE: bool = False
 
+```
+
+Пример мока библиотеки:
+
+```python
+import pytest
+from fastapi.testclient import TestClient
+from fastapi import FastAPI
+from auth_lib.testutils import auth_mock
+
+app = FastAPI()
+
+
+@pytest.fixture
+def client(auth_mock):
+    cilent = TestClient(app)
+    yield client
 ```
