@@ -6,10 +6,10 @@ import pytest
 @pytest.fixture
 def auth_mock(request):
     marker: pytest.mark = request.node.get_closest_marker("scopes")
-    scopes: tuple = marker.args if marker else ()
+    scopes: tuple = marker.args if marker else tuple()
     session_scopes = []
-    for scope in scopes:
-        session_scopes.append({"id": 0, "name": scope, "comment": ""})
+    for i, scope in enumerate(scopes):
+        session_scopes.append({"id": i, "name": scope, "comment": ""})
     _return_val: dict[str, int | list[dict[str, str | int]]] = {
         "user_id": 0,
         "id": 0,
