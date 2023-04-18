@@ -69,7 +69,7 @@ def client(auth_mock):
 
 @pytest.mark.scopes("scope1", "scope2", ...)
 def test1(client):
-    Ellipsis
+    assert 2*2 == 4
 
 
 ```
