@@ -3,7 +3,7 @@ from typing import Any, Final
 import pytest
 from pytest_mock import mocker
 
-RETURN_VALUE: Final[dict[str, Any]] = {
+RETURN_VALUE: Final[dict[str, int | list[dict[str, str | int]]]] = {
     "user_id": 0,
     "id": 0,
     "session_scopes": [
