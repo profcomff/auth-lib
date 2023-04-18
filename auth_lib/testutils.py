@@ -93,11 +93,16 @@ RETURN_VALUE: Final[dict[str, Any]] = {
 }
 
 
-@pytest.fixture
-def auth_mock(mocker):
-    """
-    Mock для библиотеки AuthLib, предоставляет все возможные права
-    """
-    auth_mock = mocker.patch("auth_lib.fastapi.UnionAuth.__call__")
-    auth_mock.return_value = RETURN_VALUE
+def create_fixture(
+    *args, scopes: dict[str, int | list[dict[str, str | int]]] = None, **kwargs
+):
+    if not scopes:
+        scopes = RETURN_VALUE
+
+    @pytest.fixture(*args, **kwargs)
+    def auth_mock(mocker):
+        _auth_mock = mocker.patch("auth_lib.fastapi.UnionAuth.__call__")
+        _auth_mock.return_value = scopes
+        yield _auth_mock
+
     return auth_mock

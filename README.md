@@ -57,13 +57,28 @@ AUTH_ALLOW_NONE: bool = False
 import pytest
 from fastapi.testclient import TestClient
 from fastapi import FastAPI
-from auth_lib.testutils import auth_mock
+from auth_lib.testutils import create_fixture
 
 app = FastAPI()
 
+mock1 = create_fixture() ## если не передано ключевоес слово `scopes` тогда будут использованы все доступные скоупы
+mock2 = create_fixture(scopes={
+    "user_id": 0,
+    "id": 0,
+    "session_scopes": [
+        {"id": 0, "name": "userdata.category.create", "comment": ""},
+        {"id": 0, "name": "userdata.category.read", "comment": ""}]})
+
 
 @pytest.fixture
-def client(auth_mock):
-    cilent = TestClient(app)
+def client1(mock1):
+    client = TestClient(app)
     yield client
+
+    
+@pytest.fixture
+def client1(mock2):
+    client = TestClient(app)
+    yield client
+
 ```
