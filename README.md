@@ -53,32 +53,23 @@ AUTH_ALLOW_NONE: bool = False
 
 Пример мока библиотеки:
 
+Установите нужные завивсимости
+```shell
+pip install 'auth-lib-profcomff[testing]'
+```
+
 ```python
 import pytest
 from fastapi.testclient import TestClient
 from fastapi import FastAPI
-from auth_lib.testutils import create_fixture
-
-app = FastAPI()
-
-mock1 = create_fixture() ## если не передано ключевоес слово `scopes` тогда будут использованы все доступные скоупы
-mock2 = create_fixture(scopes={
-    "user_id": 0,
-    "id": 0,
-    "session_scopes": [
-        {"id": 0, "name": "userdata.category.create", "comment": ""},
-        {"id": 0, "name": "userdata.category.read", "comment": ""}]})
-
 
 @pytest.fixture
-def client1(mock1):
-    client = TestClient(app)
-    yield client
+def client(auth_mock):
+    yield TestClient(FastAPI())
 
-    
-@pytest.fixture
-def client1(mock2):
-    client = TestClient(app)
-    yield client
+@pytest.mark.scopes("scope1", "scope2", ...)
+def test1(client):
+    Ellipsis
+
 
 ```
