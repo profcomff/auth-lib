@@ -5,7 +5,7 @@ with open("README.md", "r") as readme_file:
 
 setup(
     name="auth_lib_profcomff",
-    version="2023.04.18",
+    version="2023.04.19",
     author="Semyon Grigoriev",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -16,6 +16,7 @@ setup(
         "fastapi": ["fastapi", "starlette", "pydantic"],
         "testing": ["pytest"],
     },
+    entry_points={"pytest11": ["pytest_auth_lib = testutils"]},
     classifiers=[
         "Programming Language :: Python :: 3.11",
     ],
