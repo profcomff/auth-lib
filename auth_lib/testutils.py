@@ -3,10 +3,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 
-@pytest.hookimpl
 def pytest_configure(config):
     config.addinivalue_line(
-        "markers", "authenticated(scopes): mark test to mock auth_lib"
+        "markers", "authenticated(*scopes): mark test to mock auth_lib"
     )
 
 
