@@ -5,6 +5,8 @@
 ## Примеры использования
 ```python
 from auth_lib.fastapi import UnionAuth
+from fastapi import APIRouter, Depends
+router = APIRouter(prefix="/...")
 
 ## Чтобы дернуть ручку нужен один скоуп, авторизация обязательна
 ## Юзкейс https://github.com/profcomff/timetable-api/blob/a374c74cd960941100f6c923ff9c3ff706a1ed09/calendar_backend/routes/room/room.py#L45
@@ -47,4 +49,48 @@ auth_url="https://api.test.profcomff.com/auth/"
 AUTH_AUTO_ERROR: bool = True
 AUTH_ALLOW_NONE: bool = False
 
+```
+
+Пример мока библиотеки:
+
+Установите нужные завивсимости
+```shell
+pip install 'auth-lib-profcomff[testing]'
+```
+
+```python
+import pytest
+from fastapi.testclient import TestClient
+from fastapi import FastAPI
+
+@pytest.fixture
+def client(auth_mock):
+    yield TestClient(FastAPI())
+
+@pytest.mark.authenticated("scope1", "scope2", ...)
+def test1(client):
+    """
+    В этом тесте будут выданы скоупы scope1, scope2,
+    библиотека не будет проверять токен через АПИ, будет просто возвращать
+    нужный словарь, как будто пользователь авторизован с нужными скоупами
+    """
+    assert 2*2 == 4
+
+    
+@pytest.mark.authenticated()
+def test2(client):
+    """
+    В этом тесте скоупов выдано не будет,
+    но библиотека не будет проверять токен через АПИ, будет просто возвращать
+    нужный словарь, как будто пользователь авторизован с нужными скоупами
+    """
+    assert 2*2 == 4
+
+
+def test3(client):
+    """
+    В этом тесте скоупов выдано не будет, библиотека будет проверять 
+    токен через АПИ
+    """
+    assert 2*2 == 4
 ```
