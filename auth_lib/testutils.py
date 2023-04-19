@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def auth_mock(request):
-    marker: pytest.mark = request.node.get_closest_marker("scopes")
+    marker: pytest.mark = request.node.get_closest_marker("authorized")
     if marker:
         scopes: tuple[str] = marker.args
         session_scopes = []
