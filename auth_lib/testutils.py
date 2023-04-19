@@ -3,6 +3,13 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 
+@pytest.hookimpl
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "authenticated(scopes): mark test to mock auth_lib"
+    )
+
+
 @pytest.fixture(autouse=True)
 def auth_mock(request):
     marker: pytest.mark = request.node.get_closest_marker("authenticated")
