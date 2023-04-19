@@ -14,7 +14,7 @@ setup(
     install_requires=["requests", "aiohttp", "setuptools"],
     extras_require={
         "fastapi": ["fastapi", "starlette", "pydantic"],
-        "testing": ["pytest", "pytest-mock"],
+        "testing": ["pytest"],
     },
     classifiers=[
         "Programming Language :: Python :: 3.11",
