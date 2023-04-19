@@ -68,11 +68,15 @@ def client(auth_mock):
     yield TestClient(FastAPI())
 
 @pytest.mark.authenticated("scope1", "scope2", ...)
-def test1(client):
+def test1(client): ## В этом тесте будут выданы скоупы scope1, scope2
     assert 2*2 == 4
 
     
 @pytest.mark.authenticated()
-def test1(client):
+def test2(client): ## В этом тесте скоупов выдано не будет, но библиотека будет замокана
+    assert 2*2 == 4
+
+
+def test3(client): ## В этом тесте скоупов выдано не будет, библиотека не будет замокана
     assert 2*2 == 4
 ```
