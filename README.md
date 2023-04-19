@@ -67,9 +67,12 @@ from fastapi import FastAPI
 def client(auth_mock):
     yield TestClient(FastAPI())
 
-@pytest.mark.scopes("scope1", "scope2", ...)
+@pytest.mark.authenticated("scope1", "scope2", ...)
 def test1(client):
     assert 2*2 == 4
 
-
+    
+@pytest.mark.authenticated()
+def test1(client):
+    assert 2*2 == 4
 ```
