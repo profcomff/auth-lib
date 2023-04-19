@@ -16,7 +16,7 @@ setup(
         "fastapi": ["fastapi", "starlette", "pydantic"],
         "testing": ["pytest"],
     },
-    entry_points={"pytest11": ["pytest_auth_lib = testutils"]},
+    entry_points={"pytest11": ["pytest_auth_lib = auth_lib"]},
     classifiers=[
         "Programming Language :: Python :: 3.11",
     ],
