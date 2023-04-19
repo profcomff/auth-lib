@@ -1,4 +1,5 @@
 try:
     from auth_lib.testing.testutils import auth_mock, pytest_configure
 except ImportError:
-    pass
+    print("You have to install testing requirements")
+    print("pip install 'auth-lib-profcomff[testing]'")
