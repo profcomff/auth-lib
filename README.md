@@ -68,10 +68,10 @@ from fastapi import FastAPI
 def client(auth_mock):
     yield TestClient(FastAPI())
 
-@pytest.mark.authenticated("scope1", "scope2", ...)
+@pytest.mark.authenticated("scope1", "scope2", ..., user_id=5)
 def test1(client):
     """
-    В этом тесте будут выданы скоупы scope1, scope2,
+    В этом тесте будут выданы скоупы scope1, scope2, user_id в ответе будет равен 5
     библиотека не будет проверять токен через АПИ, будет просто возвращать
     нужный словарь, как будто пользователь авторизован с нужными скоупами
     """
@@ -81,7 +81,7 @@ def test1(client):
 @pytest.mark.authenticated()
 def test2(client):
     """
-    В этом тесте скоупов выдано не будет,
+    В этом тесте скоупов выдано не будет, user_id будет равен 0
     но библиотека не будет проверять токен через АПИ, будет просто возвращать
     нужный словарь, как будто пользователь авторизован с нужными скоупами
     """
