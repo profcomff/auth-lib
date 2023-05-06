@@ -57,7 +57,7 @@ class UnionAuth(SecurityBase):
                 status_code=HTTP_403_FORBIDDEN, detail="Not authenticated"
             )
         else:
-            return {}
+            return None
 
     async def __call__(
         self,
@@ -70,8 +70,7 @@ class UnionAuth(SecurityBase):
             return self._except()
         user_session = await AsyncAuthLib(url=self.auth_url).check_token(token)
         if not user_session:
-            self._except()
-            return None
+            return self._except()
         session_scopes = set(
             [scope["name"].lower() for scope in user_session["session_scopes"]]
         )
