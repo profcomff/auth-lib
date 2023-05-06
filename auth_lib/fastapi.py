@@ -1,13 +1,13 @@
-from urllib.parse import urljoin
 from warnings import warn
 
-import aiohttp
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import APIKey, APIKeyIn
 from fastapi.security.base import SecurityBase
 from pydantic import BaseSettings
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
+
+from auth_lib.aiomethods import AsyncAuthLib
 
 
 class UnionAuthSettings(BaseSettings):
@@ -62,24 +62,16 @@ class UnionAuth(SecurityBase):
     async def __call__(
         self,
         request: Request,
-    ) -> dict[str, str] | None:
+    ) -> dict[str, int | list[dict[str, str | int]]] | None:
         token = request.headers.get("Authorization")
         if not token and self.allow_none:
             return None
         if not token:
             return self._except()
-        async with aiohttp.request(
-            "GET",
-            urljoin(self.auth_url, "me"),
-            headers={"Authorization": token},
-            params={
-                "info": ["groups", "indirect_groups", "session_scopes", "user_scopes"]
-            },
-        ) as r:
-            status_code = r.status
-            user_session = await r.json()
-        if status_code != 200:
+        user_session = await AsyncAuthLib(url=self.auth_url).check_token(token)
+        if not user_session:
             self._except()
+            return None
         session_scopes = set(
             [scope["name"].lower() for scope in user_session["session_scopes"]]
         )

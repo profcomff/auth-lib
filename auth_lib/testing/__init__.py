@@ -3,3 +3,6 @@ try:
 except ImportError:
     print("You have to install testing requirements")
     print("pip install 'auth-lib-profcomff[testing]'")
+    raise ImportError()
+
+__all__ = ["auth_mock", "pytest_configure"]

@@ -2,5 +2,6 @@ fastapi
 starlette
 requests
 aiohttp
+autoflake
 setuptools
 pydantic

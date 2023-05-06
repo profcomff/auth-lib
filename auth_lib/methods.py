@@ -1,4 +1,5 @@
 from typing import Any
+from urllib.parse import urljoin
 
 import requests
 
@@ -25,10 +26,16 @@ class AuthLib:
     def check_token(self, token: str) -> dict[str, Any]:
         headers = {"Authorization": token}
         response = requests.get(
-            url=f"{self.url}/me",
+            url=urljoin(self.url, "me"),
             headers=headers,
             params={
-                "info": ["groups", "indirect_groups", "session_scopes", "user_scopes"]
+                "info": [
+                    "groups",
+                    "indirect_groups",
+                    "session_scopes",
+                    "user_scopes",
+                    "auth_methods",
+                ]
             },
         )
         match response.status_code:
