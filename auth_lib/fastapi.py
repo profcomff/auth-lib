@@ -62,14 +62,14 @@ class UnionAuth(SecurityBase):
     async def __call__(
         self,
         request: Request,
-    ) -> dict[str, int | list[dict[str, str | int]]] | None:
+    ) -> dict[str, str | int | list[int | str | dict[str, int | str]]] | None:
         token = request.headers.get("Authorization")
         if not token and self.allow_none:
             return None
         if not token:
             return self._except()
         user_session = await AsyncAuthLib(url=self.auth_url).check_token(token)
-        if not user_session:
+        if user_session is None:
             return self._except()
         session_scopes = set(
             [scope["name"].lower() for scope in user_session["session_scopes"]]

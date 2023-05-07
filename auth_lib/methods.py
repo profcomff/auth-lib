@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from .exceptions import AuthFailed, IncorrectData, NotFound, SessionExpired
+from .exceptions import AuthFailed, SessionExpired
 
 # See docs on https://api.test.profcomff.com/?urls.primaryName=auth
 
@@ -23,7 +23,9 @@ class AuthLib:
             case 401:
                 raise AuthFailed(response=response.json()["body"])
 
-    def check_token(self, token: str) -> dict[str, Any]:
+    def check_token(
+        self, token: str
+    ) -> dict[str, str | int | list[int | str | dict[str, int | str]]] | None:
         headers = {"Authorization": token}
         response = requests.get(
             url=urljoin(self.url, "me"),
@@ -38,15 +40,9 @@ class AuthLib:
                 ]
             },
         )
-        match response.status_code:
-            case 200:
-                return response.json()
-            case 400:
-                raise IncorrectData(response=response.json()["body"])
-            case 404:
-                raise NotFound(response=response.json()["body"])
-            case 403:
-                raise SessionExpired(response=response.json()["body"])
+        if response.status_code == 200:
+            return response.json()
+        return None
 
     def logout(self, token: str) -> bool:
         headers = {"Authorization": token}

@@ -26,7 +26,7 @@ class AsyncAuthLib:
 
     async def check_token(
         self, token: str
-    ) -> dict[str, int | list[dict[str, str | int]]] | None:
+    ) -> dict[str, str | int | list[int | str | dict[str, int | str]]] | None:
         headers = {"Authorization": token}
         async with aiohttp.request(
             "GET",
