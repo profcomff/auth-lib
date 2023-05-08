@@ -59,16 +59,21 @@ class UnionAuth(SecurityBase):
         else:
             return None
 
+    async def _get_session(
+        self, token: str | None
+    ) -> dict[str, str | int | list[int | str | dict[str, int | str]]] | None:
+        if not token and self.allow_none:
+            return None
+        if not token:
+            return self._except()
+        return await AsyncAuthLib(url=self.auth_url).check_token(token)
+
     async def __call__(
         self,
         request: Request,
     ) -> dict[str, str | int | list[int | str | dict[str, int | str]]] | None:
         token = request.headers.get("Authorization")
-        if not token and self.allow_none:
-            return None
-        if not token:
-            return self._except()
-        user_session = await AsyncAuthLib(url=self.auth_url).check_token(token)
+        user_session = await self._get_session(token)
         if user_session is None:
             return self._except()
         session_scopes = set(

@@ -25,7 +25,7 @@ def auth_mock(request):
         "user_scopes": session_scopes,
     }
     patcher = patch(
-        "auth_lib.aiomethods.AsyncAuthLib.check_token",
+        "auth_lib.fastapi.UnionAuth._get_session",
         new=MagicMock(return_value=_return_val),
     )
     patcher.start()
