@@ -5,7 +5,7 @@ with open("README.md", "r") as readme_file:
 
 setup(
     name="auth_lib_profcomff",
-    version="2023.04.23",
+    version="2023.05.09",
     author="Semyon Grigoriev",
     long_description=readme,
     long_description_content_type="text/markdown",
