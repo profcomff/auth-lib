@@ -1,3 +1,4 @@
+from typing import Any
 from warnings import warn
 
 from fastapi.exceptions import HTTPException
@@ -6,6 +7,7 @@ from fastapi.security.base import SecurityBase
 from pydantic import BaseSettings
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
+from starlette.websockets import WebSocket
 
 from auth_lib.aiomethods import AsyncAuthLib
 
@@ -59,9 +61,7 @@ class UnionAuth(SecurityBase):
         else:
             return None
 
-    async def _get_session(
-        self, token: str | None
-    ) -> dict[str, str | int | list[int | str | dict[str, int | str]]] | None:
+    async def _get_session(self, token: str | None) -> dict[str, Any] | None:
         if not token and self.allow_none:
             return None
         if not token:
@@ -70,8 +70,8 @@ class UnionAuth(SecurityBase):
 
     async def __call__(
         self,
-        request: Request,
-    ) -> dict[str, str | int | list[int | str | dict[str, int | str]]] | None:
+        request: Request | WebSocket,
+    ) -> dict[str, Any] | None:
         token = request.headers.get("Authorization")
         user_session = await self._get_session(token)
         if user_session is None:

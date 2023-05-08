@@ -24,9 +24,7 @@ class AsyncAuthLib:
             case 401:
                 raise AuthFailed(response=await response.json())
 
-    async def check_token(
-        self, token: str
-    ) -> dict[str, str | int | list[int | str | dict[str, int | str]]] | None:
+    async def check_token(self, token: str) -> dict[str, Any] | None:
         headers = {"Authorization": token}
         async with aiohttp.request(
             "GET",
@@ -41,9 +39,9 @@ class AsyncAuthLib:
                 ]
             },
         ) as r:
-            status_code = r.status
+            status = r.ok
             user_session = await r.json()
-        if status_code == 200:
+        if status:
             return user_session
         return None
 

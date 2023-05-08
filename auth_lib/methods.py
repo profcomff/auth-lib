@@ -23,9 +23,7 @@ class AuthLib:
             case 401:
                 raise AuthFailed(response=response.json()["body"])
 
-    def check_token(
-        self, token: str
-    ) -> dict[str, str | int | list[int | str | dict[str, int | str]]] | None:
+    def check_token(self, token: str) -> dict[str, Any] | None:
         headers = {"Authorization": token}
         response = requests.get(
             url=urljoin(self.url, "me"),
