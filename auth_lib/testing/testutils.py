@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
 
@@ -25,8 +25,8 @@ def auth_mock(request):
         "user_scopes": session_scopes,
     }
     patcher = patch(
-        "auth_lib.fastapi.UnionAuth.__call__",
-        new=MagicMock(return_value=_return_val),
+        "auth_lib.fastapi.UnionAuth._get_session",
+        new=AsyncMock(return_value=_return_val),
     )
     patcher.start()
     yield
