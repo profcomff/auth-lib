@@ -32,16 +32,13 @@ class AsyncAuthLib:
             headers={"Authorization": token},
             params={
                 "info": [
-                    "groups",
                     "indirect_groups",
                     "session_scopes",
-                    "user_scopes",
                 ]
             },
         ) as r:
-            status = r.ok
             user_session = await r.json()
-        if status:
+        if r.ok:
             return user_session
         return None
 

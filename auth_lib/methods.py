@@ -30,15 +30,12 @@ class AuthLib:
             headers=headers,
             params={
                 "info": [
-                    "groups",
                     "indirect_groups",
                     "session_scopes",
-                    "user_scopes",
-                    "auth_methods",
                 ]
             },
         )
-        if response.status_code == 200:
+        if response.ok:
             return response.json()
         return None
 
