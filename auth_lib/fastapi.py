@@ -7,7 +7,6 @@ from fastapi.security.base import SecurityBase
 from pydantic import BaseSettings
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
-from starlette.websockets import WebSocket
 
 from auth_lib.aiomethods import AsyncAuthLib
 
@@ -70,7 +69,7 @@ class UnionAuth(SecurityBase):
 
     async def __call__(
         self,
-        request: Request | WebSocket,
+        request: Request,
     ) -> dict[str, Any] | None:
         token = request.headers.get("Authorization")
         user_session = await self._get_session(token)
