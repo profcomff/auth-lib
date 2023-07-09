@@ -5,7 +5,7 @@ with open("README.md", "r") as readme_file:
 
 setup(
     name="auth_lib_profcomff",
-    version="2023.05.11",
+    version="2023.07.09",
     author="Semyon Grigoriev",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -13,7 +13,7 @@ setup(
     packages=find_packages(),
     install_requires=["requests", "aiohttp", "setuptools"],
     extras_require={
-        "fastapi": ["fastapi", "starlette", "pydantic"],
+        "fastapi": ["fastapi", "starlette", "pydantic", "pydantic_settings"],
         "testing": ["pytest"],
     },
     entry_points={"pytest11": ["pytest_auth_lib = auth_lib.testing"]},

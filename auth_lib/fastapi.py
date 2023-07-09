@@ -4,7 +4,8 @@ from warnings import warn
 from fastapi.exceptions import HTTPException
 from fastapi.openapi.models import APIKey, APIKeyIn
 from fastapi.security.base import SecurityBase
-from pydantic import BaseSettings
+from pydantic import ConfigDict
+from pydantic_settings import BaseSettings
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
 
@@ -15,12 +16,7 @@ class UnionAuthSettings(BaseSettings):
     AUTH_URL: str = "https://api.test.profcomff.com/auth/"
     AUTH_AUTO_ERROR: bool = True
     AUTH_ALLOW_NONE: bool = False
-
-    class Config:
-        """Pydantic BaseSettings config"""
-
-        case_sensitive = True
-        env_file = ".env"
+    model_config = ConfigDict(case_sensitive=True, env_file=".env", extra="allow")
 
 
 class UnionAuth(SecurityBase):
