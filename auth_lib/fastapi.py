@@ -16,7 +16,7 @@ class UnionAuthSettings(BaseSettings):
     AUTH_URL: str = "https://api.test.profcomff.com/auth/"
     AUTH_AUTO_ERROR: bool = True
     AUTH_ALLOW_NONE: bool = False
-    model_config = ConfigDict(case_sensitive=True, env_file=".env", extra="allow")
+    model_config = ConfigDict(case_sensitive=True, env_file=".env", extra="ignore")
 
 
 class UnionAuth(SecurityBase):
