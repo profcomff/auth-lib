@@ -19,8 +19,7 @@ def auth_mock(request):
     for cnt, scope in enumerate(scopes):
         session_scopes.append({"id": cnt, "name": scope, "comment": ""})
     _return_val: dict[str, int | list[dict[str, str | int]]] = {
-        "user_id": marker.kwargs.get("user_id", 0),
-        "id": 0,
+        "id": marker.kwargs.get("user_id", 0),
         "session_scopes": session_scopes,
         "user_scopes": session_scopes,
     }
