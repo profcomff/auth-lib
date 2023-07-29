@@ -78,7 +78,7 @@ class UnionAuth(SecurityBase):
             return None
         if not token:
             return self._except()
-        return await AsyncAuthLib(url=self.auth_url).check_token(token)
+        return await AsyncAuthLib(auth_url=self.auth_url).check_token(token)
 
     async def _get_userdata(
         self, token: str | None, user_id: int
@@ -88,7 +88,7 @@ class UnionAuth(SecurityBase):
         if not token:
             return self._except()
         if self.enable_userdata:
-            return await AsyncAuthLib(url=self.userdata_url).get_user_data(
+            return await AsyncAuthLib(userdata_url=self.userdata_url).get_user_data(
                 token, user_id
             )
         return None
