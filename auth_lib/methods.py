@@ -60,4 +60,3 @@ class AuthLib:
         if response.ok:
             return response.json()
         return None
-
