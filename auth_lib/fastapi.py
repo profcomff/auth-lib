@@ -14,7 +14,7 @@ from auth_lib.aiomethods import AsyncAuthLib
 
 class UnionAuthSettings(BaseSettings):
     AUTH_URL: str = "https://api.test.profcomff.com/auth/"
-    USER_DATA_URL: str = "https://api.test.profcomff.com/userdata/"
+    USERDATA_URL: str = "https://api.test.profcomff.com/userdata/"
     AUTH_AUTO_ERROR: bool = True
     AUTH_ALLOW_NONE: bool = False
     ENABLE_USER_DATA: bool = False
@@ -22,7 +22,7 @@ class UnionAuthSettings(BaseSettings):
 
 
 class UnionAuth(SecurityBase):
-    model = APIKey.construct(in_=APIKeyIn.header, name="Authorization")
+    model = APIKey.model_construct(in_=APIKeyIn.header, name="Authorization")
     scheme_name = "token"
     settings = UnionAuthSettings()
 
@@ -42,14 +42,14 @@ class UnionAuth(SecurityBase):
             )
         if user_data_url is not None:
             warn(
-                "user_data_url in args deprecated, use USER_DATA_URL env instead",
+                "userdata_url in args deprecated, use USERDATA_URL env instead",
                 DeprecationWarning,
             )
         super().__init__()
         self.auth_url = auth_url or self.settings.AUTH_URL
         if not self.auth_url.endswith("/"):
             self.auth_url = self.auth_url + "/"
-        self.user_data_url = user_data_url or self.settings.USER_DATA_URL
+        self.user_data_url = user_data_url or self.settings.USERDATA_URL
         if not self.user_data_url.endswith("/"):
             self.user_data_url = self.user_data_url + "/"
         self.auto_error = (
@@ -80,13 +80,17 @@ class UnionAuth(SecurityBase):
             return self._except()
         return await AsyncAuthLib(url=self.auth_url).check_token(token)
 
-    async def _get_userdata(self, token: str | None) -> dict[str, Any] | None:
+    async def _get_userdata(
+        self, token: str | None, user_id: int
+    ) -> dict[str, Any] | None:
         if not token and self.allow_none:
             return None
         if not token:
             return self._except()
         if self.enable_user_data:
-            return await AsyncAuthLib(url=self.user_data_url).get_user_data(token)
+            return await AsyncAuthLib(url=self.user_data_url).get_user_data(
+                token, user_id
+            )
         return None
 
     async def __call__(
@@ -97,7 +101,7 @@ class UnionAuth(SecurityBase):
         result = await self._get_session(token)
         if result is None:
             return self._except()
-        user_data_info = await self._get_userdata(token)
+        user_data_info = await self._get_userdata(token, result["id"])
         if user_data_info is None:
             return self._except()
         result["userdata"] = user_data_info

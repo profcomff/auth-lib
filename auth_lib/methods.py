@@ -10,7 +10,7 @@ from .exceptions import AuthFailed, IncorrectData, NotFound, SessionExpired
 
 class AuthLib:
     auth_url: str
-    user_data_url: str
+    userdata_url: str
 
     def __init__(self, url: str):
         self.auth_url = url
@@ -52,19 +52,11 @@ class AuthLib:
             case 403:
                 raise SessionExpired(response=response.json()["body"])
 
-    def get_user_data(self, token: str) -> dict[str | Any] | None:
+    def get_user_data(self, token: str, user_id: int) -> dict[str | Any] | None:
         headers = {"Authorization": token}
-        user_id = self.check_token(token)["id"]
         response = requests.get(
-            url=f"{self.user_data_url}/user/{user_id}", headers=headers
+            url=f"{self.userdata_url}/user/{user_id}", headers=headers
         )
-        match response.status_code:
-            case 200:
-                return response.json()
-            case 403:
-                raise SessionExpired(response=response.json()["body"])
-            case 404:
-                raise NotFound(response=response.json()["body"])
-            case 422:
-                raise IncorrectData(response=response.json()["body"])
+        if response.ok:
+            return response.json()
         return None
