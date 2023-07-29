@@ -12,8 +12,9 @@ class AsyncAuthLib:
     auth_url: str
     userdata_url: str
 
-    def __init__(self, url: str):
-        self.auth_url = url
+    def __init__(self, auth_url: str, userdata_url: str):
+        self.auth_url = auth_url
+        self.userdata_url = userdata_url
 
     async def email_login(self, email: str, password: str) -> dict[str, Any]:
         json = {"email": email, "password": password}
