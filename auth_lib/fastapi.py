@@ -14,15 +14,15 @@ from auth_lib.aiomethods import AsyncAuthLib
 
 class UnionAuthSettings(BaseSettings):
     AUTH_URL: str = "https://api.test.profcomff.com/auth/"
-    USER_DATA_URL: str = "https://api.test.profcomff.com/userdata/"
+    USERDATA_URL: str = "https://api.test.profcomff.com/userdata/"
     AUTH_AUTO_ERROR: bool = True
     AUTH_ALLOW_NONE: bool = False
-    ENABLE_USER_DATA: bool = False
+    ENABLE_USERDATA: bool = False
     model_config = ConfigDict(case_sensitive=True, env_file=".env", extra="ignore")
 
 
 class UnionAuth(SecurityBase):
-    model = APIKey.construct(in_=APIKeyIn.header, name="Authorization")
+    model = APIKey.model_construct(in_=APIKeyIn.header, name="Authorization")
     scheme_name = "token"
     settings = UnionAuthSettings()
 
@@ -31,37 +31,37 @@ class UnionAuth(SecurityBase):
         scopes: list[str] = [],
         auto_error: bool | None = None,
         allow_none: bool | None = None,
-        enable_user_data: bool | None = None,
+        enable_userdata: bool | None = None,
         auth_url=None,  # Для обратной совместимости
-        user_data_url=None,
+        userdata_url=None,
     ) -> None:
         if auth_url is not None:
             warn(
                 "auth_url in args deprecated, use AUTH_URL env instead",
                 DeprecationWarning,
             )
-        if user_data_url is not None:
+        if userdata_url is not None:
             warn(
-                "user_data_url in args deprecated, use USER_DATA_URL env instead",
+                "userdata_url in args deprecated, use USERDATA_URL env instead",
                 DeprecationWarning,
             )
         super().__init__()
         self.auth_url = auth_url or self.settings.AUTH_URL
         if not self.auth_url.endswith("/"):
             self.auth_url = self.auth_url + "/"
-        self.user_data_url = user_data_url or self.settings.USER_DATA_URL
-        if not self.user_data_url.endswith("/"):
-            self.user_data_url = self.user_data_url + "/"
+        self.userdata_url = userdata_url or self.settings.USERDATA_URL
+        if not self.userdata_url.endswith("/"):
+            self.userdata_url = self.userdata_url + "/"
         self.auto_error = (
             auto_error if auto_error is not None else self.settings.AUTH_AUTO_ERROR
         )
         self.allow_none = (
             allow_none if allow_none is not None else self.settings.AUTH_ALLOW_NONE
         )
-        self.enable_user_data = (
-            enable_user_data
-            if enable_user_data is not None
-            else self.settings.ENABLE_USER_DATA
+        self.enable_userdata = (
+            enable_userdata
+            if enable_userdata is not None
+            else self.settings.ENABLE_USERDATA
         )
         self.scopes = scopes
 
@@ -80,13 +80,17 @@ class UnionAuth(SecurityBase):
             return self._except()
         return await AsyncAuthLib(url=self.auth_url).check_token(token)
 
-    async def _get_userdata(self, token: str | None) -> dict[str, Any] | None:
+    async def _get_userdata(
+        self, token: str | None, user_id: int
+    ) -> dict[str, Any] | None:
         if not token and self.allow_none:
             return None
         if not token:
             return self._except()
-        if self.enable_user_data:
-            return await AsyncAuthLib(url=self.user_data_url).get_user_data(token)
+        if self.enable_userdata:
+            return await AsyncAuthLib(url=self.userdata_url).get_user_data(
+                token, user_id
+            )
         return None
 
     async def __call__(
@@ -97,7 +101,7 @@ class UnionAuth(SecurityBase):
         result = await self._get_session(token)
         if result is None:
             return self._except()
-        user_data_info = await self._get_userdata(token)
+        user_data_info = await self._get_userdata(token, result["id"])
         if user_data_info is None:
             return self._except()
         result["userdata"] = user_data_info
