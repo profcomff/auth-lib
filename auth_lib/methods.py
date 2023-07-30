@@ -13,10 +13,8 @@ class AuthLib:
     userdata_url: str
 
     def __init__(self, *, auth_url: str | None = None, userdata_url: str | None = None):
-        if auth_url is not None:
-            self.auth_url = auth_url
-        if userdata_url is not None:
-            self.userdata_url = userdata_url
+        self.auth_url = auth_url or self.auth_url
+        self.userdata_url = userdata_url or self.userdata_url
 
     def email_login(self, email: str, password: str) -> dict[str, Any]:
         json = {"email": email, "password": password}
