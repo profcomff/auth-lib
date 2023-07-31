@@ -65,7 +65,7 @@ class AsyncAuthLib:
         headers = {"Authorization": token}
         async with aiohttp.ClientSession() as session:
             response = await session.get(
-                url=urljoin(self.userdata_url, f"/user/{user_id}"), headers=headers
+                url=urljoin(self.userdata_url, f"user/{user_id}"), headers=headers
             )
         if response.ok:
             return await response.json()
