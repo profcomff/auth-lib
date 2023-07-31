@@ -101,10 +101,11 @@ class UnionAuth(SecurityBase):
         result = await self._get_session(token)
         if result is None:
             return self._except()
-        user_data_info = await self._get_userdata(token, result["id"])
-        result["userdata"] = []
-        if user_data_info is not None and self.enable_userdata:
-            result["userdata"].extend(user_data_info["items"])
+        if self.enable_userdata:
+            user_data_info = await self._get_userdata(token, result["id"])
+            result["userdata"] = []
+            if user_data_info is not None:
+                result["userdata"].extend(user_data_info["items"])
         session_scopes = set(
             [scope["name"].lower() for scope in result["session_scopes"]]
         )
