@@ -104,7 +104,7 @@ class UnionAuth(SecurityBase):
         user_data_info = await self._get_userdata(token, result["id"])
         if user_data_info is None and self.enable_userdata:
             return self._except()
-        result["userdata"] = user_data_info
+        result["userdata"] = user_data_info["items"]
         session_scopes = set(
             [scope["name"].lower() for scope in result["session_scopes"]]
         )

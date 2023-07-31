@@ -18,7 +18,7 @@ class AuthLib:
 
     def email_login(self, email: str, password: str) -> dict[str, Any]:
         json = {"email": email, "password": password}
-        response = requests.post(url=f"{self.auth_url}/email/login", json=json)
+        response = requests.post(url=urljoin(self.auth_url, "email/login"), json=json)
         match response.status_code:
             case 200:
                 return response.json()
@@ -43,8 +43,7 @@ class AuthLib:
 
     def logout(self, token: str) -> bool:
         headers = {"Authorization": token}
-        response = requests.post(url=f"{self.auth_url}/logout", headers=headers)
-
+        response = requests.post(url=urljoin(self.auth_url, "logout"), headers=headers)
         match response.status_code:
             case 200:
                 return True
@@ -56,7 +55,7 @@ class AuthLib:
     def get_user_data(self, token: str, user_id: int) -> dict[str | Any] | None:
         headers = {"Authorization": token}
         response = requests.get(
-            url=f"{self.userdata_url}/user/{user_id}", headers=headers
+            url=urljoin(self.userdata_url, f"user/{user_id}"), headers=headers
         )
         if response.ok:
             return response.json()

@@ -19,7 +19,9 @@ class AsyncAuthLib:
     async def email_login(self, email: str, password: str) -> dict[str, Any]:
         json = {"email": email, "password": password}
         async with aiohttp.ClientSession() as session:
-            response = await session.post(url=f"{self.auth_url}/email/login", json=json)
+            response = await session.post(
+                url=urljoin(self.auth_url, "email/login"), json=json
+            )
         match response.status:
             case 200:
                 return await response.json()
@@ -48,7 +50,7 @@ class AsyncAuthLib:
         headers = {"Authorization": token}
         async with aiohttp.ClientSession() as session:
             response = await session.post(
-                url=f"{self.auth_url}/logout", headers=headers
+                url=urljoin(self.auth_url, "logout"), headers=headers
             )
 
         match response.status:
@@ -63,7 +65,7 @@ class AsyncAuthLib:
         headers = {"Authorization": token}
         async with aiohttp.ClientSession() as session:
             response = await session.get(
-                url=f"{self.userdata_url}/user/{user_id}", headers=headers
+                url=urljoin(self.userdata_url, f"/user/{user_id}"), headers=headers
             )
         if response.ok:
             return await response.json()
