@@ -3,20 +3,22 @@ from urllib.parse import urljoin
 
 import requests
 
-from .exceptions import AuthFailed, SessionExpired
+from .exceptions import AuthFailed, IncorrectData, NotFound, SessionExpired
 
 # See docs on https://api.test.profcomff.com/?urls.primaryName=auth
 
 
 class AuthLib:
-    url: str
+    auth_url: str
+    userdata_url: str
 
-    def __init__(self, url: str):
-        self.url = url
+    def __init__(self, *, auth_url: str | None = None, userdata_url: str | None = None):
+        self.auth_url = auth_url
+        self.userdata_url = userdata_url
 
     def email_login(self, email: str, password: str) -> dict[str, Any]:
         json = {"email": email, "password": password}
-        response = requests.post(url=f"{self.url}/email/login", json=json)
+        response = requests.post(url=urljoin(self.auth_url, "email/login"), json=json)
         match response.status_code:
             case 200:
                 return response.json()
@@ -26,7 +28,7 @@ class AuthLib:
     def check_token(self, token: str) -> dict[str, Any] | None:
         headers = {"Authorization": token}
         response = requests.get(
-            url=urljoin(self.url, "me"),
+            url=urljoin(self.auth_url, "me"),
             headers=headers,
             params={
                 "info": [
@@ -41,8 +43,7 @@ class AuthLib:
 
     def logout(self, token: str) -> bool:
         headers = {"Authorization": token}
-        response = requests.post(url=f"{self.url}/logout", headers=headers)
-
+        response = requests.post(url=urljoin(self.auth_url, "logout"), headers=headers)
         match response.status_code:
             case 200:
                 return True
@@ -50,3 +51,12 @@ class AuthLib:
                 raise AuthFailed(response=response.json()["body"])
             case 403:
                 raise SessionExpired(response=response.json()["body"])
+
+    def get_user_data(self, token: str, user_id: int) -> dict[str | Any] | None:
+        headers = {"Authorization": token}
+        response = requests.get(
+            url=urljoin(self.userdata_url, f"user/{user_id}"), headers=headers
+        )
+        if response.ok:
+            return response.json()
+        return None
