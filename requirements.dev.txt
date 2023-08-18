@@ -1,7 +1,6 @@
-fastapi
-starlette
-requests
-aiohttp
 autoflake
-setuptools
+fastapi
 pydantic
+pydantic_settings
+pytest
+setuptools
