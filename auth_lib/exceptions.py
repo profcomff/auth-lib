@@ -1,6 +1,5 @@
 class AuthError(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__("Auth failed")
+    """Базовая ошибка библиотеки auth-lib"""
 
 
 class IncorrectData(AuthError):
