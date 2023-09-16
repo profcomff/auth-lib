@@ -1,4 +1,4 @@
-from auth_lib.aiomethods import AsyncAuthAPILib, AsyncUserdataAPILib
+from auth_lib._aiomethods import AsyncAuthAPILib, AsyncUserdataAPILib
 
 
 class AsyncAuthLib(AsyncAuthAPILib, AsyncUserdataAPILib):

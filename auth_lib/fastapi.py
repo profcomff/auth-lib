@@ -9,7 +9,7 @@ from pydantic_settings import BaseSettings
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
 
-from auth_lib.aiomethods import AsyncAuthLib
+from auth_lib._aiomethods import AsyncAuthLib
 
 
 class UnionAuthSettings(BaseSettings):

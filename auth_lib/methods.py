@@ -1,4 +1,4 @@
-from auth_lib.methods import AuthAPILib, UserdataAPILib
+from auth_lib._methods import AuthAPILib, UserdataAPILib
 
 
 class AuthLib(AuthAPILib, UserdataAPILib):
