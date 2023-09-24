@@ -4,6 +4,10 @@
 [![pypi](https://img.shields.io/pypi/dm/auth-lib-profcomff?label=PIP%20INSTALLS&style=for-the-badge)](https://pypi.org/project/auth-lib-profcomff)
 [![tg](https://img.shields.io/badge/telegram-Viribus%20unitis-brightgreen?style=for-the-badge&logo=telegram)](https://t.me/+eIMtCymYDepmN2Ey)
 
+
+## Функционал
+Хранение общих методов аутентификации и авторизации для бэкендов Твой ФФ
+
 ## Примеры использования
 ### FastAPI
 ```python
