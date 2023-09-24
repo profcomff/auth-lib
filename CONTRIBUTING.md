@@ -1,3 +1,9 @@
+## Что нужно для запуска 
+
+ 1. python3.11. Установка описана [тут](https://www.python.org/downloads/)
+
+ 2. Завсимости, описанные в setup.py, requirements.dev.txt
+
 ## Как тестировать при разработке
 1. Создаете ветку в репозитории, разрабатываете там
 2. Закончили - коммитите изменения
@@ -11,3 +17,8 @@
 3. Как работает Depends: https://fastapi.tiangolo.com/tutorial/dependencies/
 4. Разрабатывайте
 
+## Codestyle
+
+ - Black. Как пользоваться описано [тут](https://black.readthedocs.io/en/stable/)
+
+ - Также применяем [isort](https://pycqa.github.io/isort/)
