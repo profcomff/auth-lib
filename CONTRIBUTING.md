@@ -14,8 +14,16 @@
 ## Как контрибьютить
 1. `git clone https://github.com/profcomff/auth-lib.git`
 2. Создавайте ветку
-3. Как работает Depends: https://fastapi.tiangolo.com/tutorial/dependencies/
-4. Разрабатывайте
+### Если хотите добавить новый общий метод
+3. Написать этот метод в файл /auth_lib/methods.py - синхронная версия и, если есть возможность, в файл /auth_lib/aiomethods/py - асинхронная версия
+4. Протестировать метод на локальном/тестовом АПИ
+### Если хотите добавить логику в общий класс порверки аутентификации и авторизации 
+3. Прочитайте как работает Depends: https://fastapi.tiangolo.com/tutorial/dependencies/
+4. Нужная вам логика описана в /auth_lib/fastapi.py. Основной метод - __call__.py.
+### Если хотите поменять логику тестирования библиотеки 
+3. Прорчитайте про используемые в этой библиотеке [моки](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch) из unittest
+4. Прочитайте про [pytest fixtures](https://docs.pytest.org/en/6.2.x/fixture.html#what-fixtures-are). [Это](https://habr.com/ru/articles/448786/) тоже неплохая статья.
+5. Нужная вам логика описана в /auth_lib/testing/testutils.py.
 
 ## Codestyle
 
