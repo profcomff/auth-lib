@@ -21,7 +21,7 @@
 3. Прочитайте как работает Depends: https://fastapi.tiangolo.com/tutorial/dependencies/
 4. Нужная вам логика описана в /auth_lib/fastapi.py. Основной метод - __call__.py.
 ### Если хотите поменять логику тестирования библиотеки 
-3. Прорчитайте про используемые в этой библиотеке [моки](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch) из unittest
+3. Прочитайте про используемые в этой библиотеке [моки](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch) из unittest
 4. Прочитайте про [pytest fixtures](https://docs.pytest.org/en/6.2.x/fixture.html#what-fixtures-are). [Это](https://habr.com/ru/articles/448786/) тоже неплохая статья.
 5. Нужная вам логика описана в /auth_lib/testing/testutils.py.
 
