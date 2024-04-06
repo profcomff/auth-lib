@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as readme_file:
 
 
 with open("requirements.txt", "r", encoding="utf-8") as req_file:
-    req = req_file.read().split('\n')
+    req = req_file.read().split("\n")
 
 
 setup(
