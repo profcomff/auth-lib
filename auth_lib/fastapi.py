@@ -11,11 +11,6 @@ from starlette.status import HTTP_403_FORBIDDEN
 
 from auth_lib._aiomethods import AsyncAuthLib
 
-<<<<<<< Updated upstream
-from auth_lib.aiomethods import AsyncAuthLib
-
-=======
->>>>>>> Stashed changes
 
 class UnionAuthSettings(BaseSettings):
     AUTH_URL: str = "https://api.test.profcomff.com/auth/"
@@ -72,9 +67,7 @@ class UnionAuth(SecurityBase):
 
     def _except(self):
         if self.auto_error:
-            raise HTTPException(
-                status_code=HTTP_403_FORBIDDEN, detail="Not authorized"
-            )
+            raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail="Not authorized")
         else:
             return None
 
