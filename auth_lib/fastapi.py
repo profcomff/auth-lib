@@ -73,7 +73,7 @@ class UnionAuth(SecurityBase):
         else:
             return None
 
-    def _except_authentification(self):
+    def _except_authentificated(self):
         if self.auto_error:
             raise HTTPException(
                 status_code=HTTP_403_FORBIDDEN, detail="Not authenticated"
@@ -119,5 +119,5 @@ class UnionAuth(SecurityBase):
         )
         required_scopes = set([scope.lower() for scope in self.scopes])
         if required_scopes - session_scopes:
-            self._except_authentification()
+            self._except_authentificated()
         return result
