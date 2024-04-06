@@ -68,14 +68,16 @@ class UnionAuth(SecurityBase):
     def _except_authentification(self):
         if self.auto_error:
             raise HTTPException(
-                status_code=HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+                status_code=HTTP_401_UNAUTHORIZED, detail="Not authorized"
             )
         else:
             return None
 
     def _except_authorization(self):
         if self.auto_error:
-            raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail="Not authorized")
+            raise HTTPException(
+                status_code=HTTP_403_FORBIDDEN, detail="Not authenticated"
+            )
         else:
             return None
 
