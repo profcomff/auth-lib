@@ -38,6 +38,7 @@ class AsyncAuthLib:
                 "info": [
                     "indirect_groups",
                     "session_scopes",
+                    "user_scopes"
                 ]
             },
         ) as r:
