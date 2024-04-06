@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from .exceptions import AuthFailed, IncorrectData, NotFound, SessionExpired
+from .exceptions import AuthFailed, SessionExpired
 
 # See docs on https://api.test.profcomff.com/?urls.primaryName=auth
 
