@@ -4,6 +4,10 @@
 [![pypi](https://img.shields.io/pypi/dm/auth-lib-profcomff?label=PIP%20INSTALLS&style=for-the-badge)](https://pypi.org/project/auth-lib-profcomff)
 [![tg](https://img.shields.io/badge/telegram-Viribus%20unitis-brightgreen?style=for-the-badge&logo=telegram)](https://t.me/+eIMtCymYDepmN2Ey)
 
+
+## Функционал
+Хранение общих методов аутентификации и авторизации для бэкендов Твой ФФ
+
 ## Примеры использования
 ### FastAPI
 ```python
@@ -95,3 +99,8 @@ def test3(client):
     """
     assert 2*2 == 4
 ```
+
+## Contributing 
+ - Основная [информация](https://github.com/profcomff/.github/wiki/%255Bdev%255D-Backend-%25D1%2580%25D0%25B0%25D0%25B7%25D1%2580%25D0%25B0%25D0%25B1%25D0%25BE%25D1%2582%25D0%25BA%25D0%25B0) по разработке наших приложений
+
+ - [Ссылка](https://github.com/profcomff/auth-lib/blob/main/CONTRIBUTING.md) на страницу с информацией по разработке auth-lib
