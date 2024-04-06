@@ -85,7 +85,7 @@ class UnionAuth(SecurityBase):
         if not token and self.allow_none:
             return None
         if not token:
-            return self._except_authentification()
+            return self._except_authorization()
         return await AsyncAuthLib(auth_url=self.auth_url).check_token(token)
 
     async def _get_userdata(
@@ -94,7 +94,7 @@ class UnionAuth(SecurityBase):
         if not token and self.allow_none:
             return None
         if not token:
-            return self._except_authentification()
+            return self._except_authorization()
         if self.enable_userdata:
             return await AsyncAuthLib(userdata_url=self.userdata_url).get_user_data(
                 token, user_id
@@ -108,7 +108,7 @@ class UnionAuth(SecurityBase):
         token = request.headers.get("Authorization")
         result = await self._get_session(token)
         if result is None:
-            return self._except_authentification()
+            return self._except_authorization()
         if self.enable_userdata:
             user_data_info = await self._get_userdata(token, result["id"])
             result["userdata"] = []
@@ -119,5 +119,5 @@ class UnionAuth(SecurityBase):
         )
         required_scopes = set([scope.lower() for scope in self.scopes])
         if required_scopes - session_scopes:
-            self._except_authorization()
+            self._except_authentification()
         return result
