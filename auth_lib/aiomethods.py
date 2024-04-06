@@ -34,12 +34,7 @@ class AsyncAuthLib:
             "GET",
             urljoin(self.auth_url, "me"),
             headers={"Authorization": token},
-            params={
-                "info": [
-                    "indirect_groups",
-                    "session_scopes",
-                ]
-            },
+            params={"info": ["indirect_groups", "session_scopes", "user_scopes"]},
         ) as r:
             user_session = await r.json()
         if r.ok:

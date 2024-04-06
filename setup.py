@@ -10,7 +10,7 @@ with open("requirements.txt", "r", encoding="utf-8") as req_file:
 
 setup(
     name="auth_lib_profcomff",
-    version="2023.08.06",
+    version="2024.04.06",
     author="Semyon Grigoriev",
     long_description=readme,
     long_description_content_type="text/markdown",
