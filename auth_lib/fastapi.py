@@ -9,7 +9,6 @@ from pydantic_settings import BaseSettings
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.status import HTTP_401_UNAUTHORIZED
-
 from auth_lib.aiomethods import AsyncAuthLib
 
 
