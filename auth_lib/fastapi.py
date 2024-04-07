@@ -7,7 +7,7 @@ from fastapi.security.base import SecurityBase
 from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
 from starlette.requests import Request
-from starlette.status import HTTP_403_FORBIDDEN
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 
 from auth_lib.aiomethods import AsyncAuthLib
 
@@ -121,4 +121,3 @@ class UnionAuth(SecurityBase):
         if required_scopes - session_scopes:
             self._except_not_authentificated()
         return result
-
