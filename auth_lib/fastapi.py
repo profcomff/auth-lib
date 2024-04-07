@@ -121,3 +121,4 @@ class UnionAuth(SecurityBase):
         if required_scopes - session_scopes:
             self._except_not_authentificated()
         return result
+
