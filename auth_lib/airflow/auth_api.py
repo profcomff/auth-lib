@@ -5,7 +5,7 @@
 """
 import logging
 import os
-from typing import Any, Callable
+from typing import Any, Callable, cast, TypeVar
 from functools import lru_cache, wraps
 
 from flask import Response, request
@@ -38,23 +38,28 @@ def init_app(_):
     """Инициализация приложения"""
 
 
-def requires_authentication(fn: Callable):
+T = TypeVar("T", bound=Callable)
+
+def requires_authentication(function: T):
     """Декоратор для проверки аутентификации
 
     Все API функции Airflow обернуты в этот декоратор. Функция должна возвращать функцию-обертку,
     проверяющую аутентификацию пользователя
     """
 
-    @wraps(fn)
+    @wraps(function)
     def wrapper(*args, **kwargs):
-        user = get_auth_api().check_token(request.headers.get("Authorization"))
-        logger.info(f"Authorization requested for {fn.__name__}")
+        token = request.headers.get("Authorization") or request.cookies.get("Authorization")
+        user = get_auth_api().check_token(token)
         if user is None:
             return Response("Forbidden", 403)
-        if API_USER_SCOPE not in user["session_scopes"]:
+        for i in user.get("session_scopes", []):
+            if i.get("name") == API_USER_SCOPE:
+                break
+        else:
             return Response("Unauthorized", 401)
-        logger.info(f"User {user.get('id')=} requested {fn.__name__}")
-        result = fn(*args, **kwargs)
+        logger.info(f"User id={user.get('id')} requested {request}")
+        result = function(*args, **kwargs)
         return result
 
-    return wrapper
+    return cast(T, wrapper)
