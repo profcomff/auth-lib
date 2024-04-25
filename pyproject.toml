@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auth_lib_profcomff"
+authors = [
+    {name = "profcomff.com", email = "admin@profcomff.com"},
+    {name = "Semyon Grigoriev", email = "grigoriev@profcomff.com"},
+    {name = "Roman Dyakov", email = "roman@dyakov.space"}
+]
+description = "Библиотека функций авторизации для микросервисов Твой ФФ!"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "requests",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://app.profcomff.com"
+Documentation = "https://github.com/profcomff/auth-lib/blob/main/README.md"
+Repository = "https://github.com/profcomff/auth-lib"
+Issues = "https://github.com/profcomff/auth-lib/issues"
+Changelog = "https://github.com/profcomff/auth-lib/releases"
+
+[project.entry-points.pytest11]
+pytest_auth_lib = "auth_lib.testing"
+
+[tool.setuptools]
+packages = ["auth_lib"]
+
+[tool.setuptools.dynamic]
+version = {attr = "auth_lib.__version__"}
+
+[project.optional-dependencies]
+aio = ["aiohttp"]
+fastapi = ["fastapi", "starlette", "pydantic", "pydantic_settings"]
+testing = ["pytest", "pytest-cov", "pytest-mock", "httpx", "requests"]
+style = ["black", "isort", "pydocstyle", "autoflake"]
+
+[project.scripts]
+backend = "print_service.__main__:main"
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+skip-string-normalization = true
+
+[tool.isort]
+line_length = 120
+multi_line_output = 3
+profile = "black"
+lines_after_imports = 2
+include_trailing_comma = true
