@@ -42,6 +42,7 @@ version = {attr = "auth_lib.__version__"}
 [project.optional-dependencies]
 aio = ["aiohttp"]
 fastapi = ["fastapi", "starlette", "pydantic", "pydantic_settings"]
+airflow = ["flask", "apache-airflow"]
 testing = ["pytest", "pytest-cov", "pytest-mock", "httpx", "requests"]
 style = ["black", "isort", "pydocstyle", "autoflake"]
 
