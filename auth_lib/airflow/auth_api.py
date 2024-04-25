@@ -22,8 +22,8 @@ CLIENT_AUTH: tuple[str, str] | Any | None = None  # Требуется Airflow �
 @lru_cache
 def get_auth_api() -> AuthLib:
     auth_api = AuthLib(
-        auth_url=conf.get("api", "auth_url") or os.getenv("AUTH_URL") or DEFAULT_AUTH_URL,
-        userdata_url=conf.get("api", "userdata_url") or os.getenv("USERDATA_URL") or DEFAULT_USERDATA_URL,
+        auth_url=conf.get("api", "auth_url", fallback=None) or os.getenv("AUTH_URL") or DEFAULT_AUTH_URL,
+        userdata_url=conf.get("api", "userdata_url", fallback=None) or os.getenv("USERDATA_URL") or DEFAULT_USERDATA_URL,
     )
     return auth_api
 
