@@ -1,4 +1,4 @@
-from unittest.mock import AsyncMock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -25,7 +25,7 @@ def auth_mock(request):
     }
     patcher = patch(
         "auth_lib.fastapi.UnionAuth._get_session",
-        new=AsyncMock(return_value=_return_val),
+        return_value=_return_val,
     )
     patcher.start()
     yield
