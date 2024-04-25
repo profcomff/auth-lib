@@ -9,7 +9,7 @@ from pydantic_settings import BaseSettings
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 
-from auth_lib.aiomethods import AsyncAuthLib
+from auth_lib.methods import AuthLib
 
 
 class UnionAuthSettings(BaseSettings):
@@ -89,14 +89,14 @@ class UnionAuth(SecurityBase):
         else:
             return None
 
-    async def _get_session(self, token: str | None) -> dict[str, Any] | None:
+    def _get_session(self, token: str | None) -> dict[str, Any] | None:
         if not token and self.allow_none:
             return None
         if not token:
             return self._except_not_authentificated()
-        return await AsyncAuthLib(auth_url=self.auth_url).check_token(token)
+        return AuthLib(auth_url=self.auth_url).check_token(token)
 
-    async def _get_userdata(
+    def _get_userdata(
         self, token: str | None, user_id: int
     ) -> dict[str, Any] | None:
         if not token and self.allow_none:
@@ -104,21 +104,21 @@ class UnionAuth(SecurityBase):
         if not token:
             return self._except_not_authentificated()
         if self.enable_userdata:
-            return await AsyncAuthLib(userdata_url=self.userdata_url).get_user_data(
+            return AuthLib(userdata_url=self.userdata_url).get_user_data(
                 token, user_id
             )
         return None
 
-    async def __call__(
+    def __call__(
         self,
         request: Request,
     ) -> dict[str, Any] | None:
         token = request.headers.get("Authorization")
-        result = await self._get_session(token)
+        result = self._get_session(token)
         if result is None:
             return self._except_not_authentificated()
         if self.enable_userdata:
-            user_data_info = await self._get_userdata(token, result["id"])
+            user_data_info = self._get_userdata(token, result["id"])
             result["userdata"] = []
             if user_data_info is not None:
                 result["userdata"] = user_data_info["items"]
