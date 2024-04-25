@@ -1,11 +1,12 @@
+"""Модуль асинхронных запросов к авторизации
+
+Depricated! Эти функции будут удалены в следующих версиях, используйте синхронный модуль `auth_lib.methods`
+"""
+import warnings
 from typing import Any
-from urllib.parse import urljoin
+from .methods import AuthLib
 
-import aiohttp
-
-from .exceptions import AuthFailed, SessionExpired
-
-# See docs on https://api.test.profcomff.com/?urls.primaryName=auth
+warnings.warn("Module 'auth_lib.aiomethods' is deprecated", DeprecationWarning)
 
 
 class AsyncAuthLib:
@@ -13,55 +14,23 @@ class AsyncAuthLib:
     userdata_url: str
 
     def __init__(self, *, auth_url: str | None = None, userdata_url: str | None = None):
+        warnings.warn("Class 'auth_lib.aiomethods.AsyncAuthLib' is deprecated", DeprecationWarning)
         self.auth_url = auth_url
         self.userdata_url = userdata_url
+        self.lib = AuthLib(auth_url=auth_url, userdata_url=userdata_url)
 
     async def email_login(self, email: str, password: str) -> dict[str, Any]:
-        json = {"email": email, "password": password}
-        async with aiohttp.ClientSession() as session:
-            response = await session.post(
-                url=urljoin(self.auth_url, "email/login"), json=json
-            )
-        match response.status:
-            case 200:
-                return await response.json()
-            case 401:
-                raise AuthFailed(response=await response.json())
+        warnings.warn("Method 'auth_lib.aiomethods.AsyncAuthLib.email_login' is deprecated", DeprecationWarning)
+        return self.lib.email_login(email, password)
 
     async def check_token(self, token: str) -> dict[str, Any] | None:
-        headers = {"Authorization": token}
-        async with aiohttp.request(
-            "GET",
-            urljoin(self.auth_url, "me"),
-            headers={"Authorization": token},
-            params={"info": ["indirect_groups", "session_scopes", "user_scopes"]},
-        ) as r:
-            user_session = await r.json()
-        if r.ok:
-            return user_session
-        return None
+        warnings.warn("Method 'auth_lib.aiomethods.AsyncAuthLib.check_token' is deprecated", DeprecationWarning)
+        return self.lib.check_token(token)
 
     async def logout(self, token: str) -> bool:
-        headers = {"Authorization": token}
-        async with aiohttp.ClientSession() as session:
-            response = await session.post(
-                url=urljoin(self.auth_url, "logout"), headers=headers
-            )
-
-        match response.status:
-            case 200:
-                return True
-            case 401:
-                raise AuthFailed(response=await response.json())
-            case 403:
-                raise SessionExpired(response=await response.json())
+        warnings.warn("Method 'auth_lib.aiomethods.AsyncAuthLib.logout' is deprecated", DeprecationWarning)
+        return self.lib.logout(token)
 
     async def get_user_data(self, token: str, user_id: int) -> dict[str | Any] | None:
-        headers = {"Authorization": token}
-        async with aiohttp.ClientSession() as session:
-            response = await session.get(
-                url=urljoin(self.userdata_url, f"user/{user_id}"), headers=headers
-            )
-        if response.ok:
-            return await response.json()
-        return None
+        warnings.warn("Method 'auth_lib.aiomethods.AsyncAuthLib.get_user_data' is deprecated", DeprecationWarning)
+        return self.lib.get_user_data(token, user_id)
