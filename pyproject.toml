@@ -46,9 +46,6 @@ airflow = ["flask", "apache-airflow"]
 testing = ["pytest", "pytest-cov", "pytest-mock", "httpx", "requests"]
 style = ["black", "isort", "pydocstyle", "autoflake"]
 
-[project.scripts]
-backend = "print_service.__main__:main"
-
 [tool.black]
 line-length = 120
 target-version = ['py311']
