@@ -1,4 +1,4 @@
 from .methods import AuthLib
 
-__version__ = '2024.04.25.6'
+__version__ = '2024.06.22'
 __all__ = ["AuthLib"]
