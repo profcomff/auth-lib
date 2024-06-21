@@ -34,6 +34,7 @@ class AuthLib:
                 "info": [
                     "indirect_groups",
                     "session_scopes",
+                    "user_scopes"
                 ]
             },
         )
