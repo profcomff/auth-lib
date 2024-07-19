@@ -1,6 +1,8 @@
 # auth-lib
 Библиотека функций авторизации для микросервисов Твой ФФ!
 
+[<img src="https://cdn.profcomff.com/easycode/easycode.svg" width="200"></img>](https://easycode.profcomff.com/templates/docker-fastapi/workspace?mode=manual&param.Repository+URL=https://github.com/profcomff/auth-lib.git&param.Working+directory=auth-lib)
+
 [![pypi](https://img.shields.io/pypi/dm/auth-lib-profcomff?label=PIP%20INSTALLS&style=for-the-badge)](https://pypi.org/project/auth-lib-profcomff)
 [![tg](https://img.shields.io/badge/telegram-Viribus%20unitis-brightgreen?style=for-the-badge&logo=telegram)](https://t.me/+eIMtCymYDepmN2Ey)
 
