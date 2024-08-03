@@ -1,8 +1,9 @@
 name: Publish Python 🐍 distributions 📦
 
 on:
-  tags:
-    - 'v*'
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build-and-publish:
