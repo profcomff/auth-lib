@@ -1,8 +1,8 @@
 name: Publish Python 🐍 distributions 📦
 
 on:
-  release:
-    types: [published]
+  tags:
+    - 'v*'
 
 jobs:
   build-and-publish:
@@ -14,6 +14,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
+      - name: Change version
+        run: |
+          VERSION=${{ github.ref_name }}
+          sed -i -e "s/__version__ = '1.0.0'/__version__ = '${VERSION:1}'/g" ${{ github.workspace }}/auth_lib/__init__.py
       - name: Install dependencies
         run: |
           python -m ensurepip 
